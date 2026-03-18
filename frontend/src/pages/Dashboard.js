@@ -57,9 +57,9 @@ function Dashboard() {
       <PageHeader title="Dashboard" subtitle="Fact-checking & Credibility Analysis" />
 
       <div style={styles.statsRow}>
-        <StatCard label="Total Analyzed" value={stats.total} icon="🔍" color={theme.colors.primary} />
-        <StatCard label="Fake Detected" value={stats.fakeCount} icon="🚩" color={theme.colors.status.fake.bar} />
-        <StatCard label="Avg. Confidence" value={`${stats.avgConf}%`} icon="📈" color={theme.colors.status.real.bar} />
+        <StatCard label="Total Analyzed" value={stats.total} color={theme.colors.primary} />
+        <StatCard label="Fake Detected" value={stats.fakeCount} color={theme.colors.status.fake.bar} />
+        <StatCard label="Avg. Confidence" value={`${stats.avgConf}%`} color={theme.colors.status.real.bar} />
       </div>
 
       <div style={styles.card}>
