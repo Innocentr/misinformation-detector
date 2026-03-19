@@ -1,132 +1,113 @@
-from fastapi import FastAPI
 import pickle
-from database import engine
-from models import Base
-from database import SessionLocal
-from models import Prediction
-from auth import hash_password, verify_password, create_token
-from models import User
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from auth import decode_token
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
+from typing import List
+# from routers import predict #will add career and sentiment
 
+# Local imports
+from database import engine, SessionLocal, get_db
+from models import Base, Prediction, User
+from auth import hash_password, verify_password, create_token, decode_token
+from schemas import PredictionResponse, PredictRequest, UserAuth, Token # New file
+
+# --- Lifecycle Management ---
+# This ensures models are loaded correctly before the API accepts requests
+ml_models = {}
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        ml_models["model"] = pickle.load(open("../ml/lr_model.pkl", "rb"))
+        ml_models["vectorizer"] = pickle.load(open("../ml/vectorizer.pkl", "rb"))
+        print("ML models loaded successfully")
+    except Exception as e:
+        print(f"Critical Error: Could not load ML models: {e}")
+    yield
+    ml_models.clear()
+
+# Initialize App with Lifespan
 Base.metadata.create_all(bind=engine)
-app = FastAPI()
-
-app = FastAPI()
+app = FastAPI(title="VeriTrust AI", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 security = HTTPBearer()
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+# --- Auth Dependency ---
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security), 
+    db: Session = Depends(get_db)
+):
     token = credentials.credentials
     username = decode_token(token)
+    if not username:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
-    if username is None:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    db = SessionLocal()
     user = db.query(User).filter(User.username == username).first()
-    db.close()
-
-    if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
-
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     return user
 
-# Load model
-model = pickle.load(open("../ml/lr_model.pkl", "rb"))
-vectorizer = pickle.load(open("../ml/vectorizer.pkl", "rb"))
+# --- Routes ---
 
-@app.get("/")
-def home():
-    return {"message": "Fake News Detection API is running"}
+@app.post("/predict", response_model=PredictionResponse)
+async def predict(
+    payload: PredictRequest, 
+    user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
+    if "model" not in ml_models:
+        raise HTTPException(status_code=503, detail="Model not initialized")
 
-@app.post("/predict")
-def predict(data: dict, user: User = Depends(get_current_user)):
-    text = data["text"]
+    # ML Inference
+    vec = ml_models["vectorizer"].transform([payload.text])
+    prediction_idx = ml_models["model"].predict(vec)[0]
+    prob = ml_models["model"].predict_proba(vec)[0].max()
+    result = "REAL" if prediction_idx == 1 else "FAKE"
 
-    vec = vectorizer.transform([text])
-    prediction = model.predict(vec)[0]
-    prob = model.predict_proba(vec)[0].max()
-
-    result = "REAL" if prediction == 1 else "FAKE"
-
-    db = SessionLocal()
     db_entry = Prediction(
-        text=text,
+        text=payload.text,
         prediction=result,
         confidence=float(prob),
         user_id=user.id  
     )
     db.add(db_entry)
     db.commit()
-    db.close()
+    db.refresh(db_entry)
+    return db_entry
 
-    return {
-        "prediction": result,
-        "confidence": float(prob)
-    }
-
-
-
-@app.get("/history")
-def get_history(user: User = Depends(get_current_user)):
-    db = SessionLocal()
-
-    records = db.query(Prediction).filter(Prediction.user_id == user.id).all()
-
-    db.close()
-
-    return [
-        {
-            "id": r.id,
-            "text": r.text,
-            "prediction": r.prediction,
-            "confidence": r.confidence,
-            "created_at": r.created_at
-        }
-        for r in records
-    ]
-
-
+@app.get("/history", response_model=List[PredictionResponse])
+async def get_history(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return db.query(Prediction).filter(Prediction.user_id == user.id).all()
 
 @app.post("/register")
-def register(data: dict):
-    db = SessionLocal()
+async def register(user_data: UserAuth, db: Session = Depends(get_db)):
+    if db.query(User).filter(User.username == user_data.username).first():
+        raise HTTPException(status_code=400, detail="Username already registered")
 
-    user = User(
-        username=data["username"],
-        password=hash_password(data["password"])
+    new_user = User(
+        username=user_data.username,
+        password=hash_password(user_data.password)
     )
-
-    db.add(user)
+    db.add(new_user)
     db.commit()
-    db.close()
+    return {"message": "User created successfully"}
 
-    return {"message": "User created"}
-
-
-@app.post("/login")
-def login(data: dict):
-    db = SessionLocal()
-
-    user = db.query(User).filter(User.username == data["username"]).first()
-
-    if not user or not verify_password(data["password"], user.password):
+@app.post("/login", response_model=Token)
+async def login(user_data: UserAuth, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == user_data.username).first()
+    if not user or not verify_password(user_data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_token({"sub": user.username})
-
-    db.close()
-
-    return {"access_token": token}
-
-
+    return {"access_token": token, "token_type": "bearer"}
