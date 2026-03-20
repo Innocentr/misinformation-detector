@@ -1,6 +1,6 @@
-# Misinformation Detector
+# VeriSight
 
-A full-stack misinformation detection app with a FastAPI backend, a React frontend, and a logistic-regression text classifier.
+A full-stack trust intelligence application with a FastAPI backend, a React frontend, and a logistic-regression text classifier for credibility-focused content analysis.
 
 ## Stack
 

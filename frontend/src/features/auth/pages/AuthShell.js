@@ -5,11 +5,11 @@ function AuthShell({ title, description, children }) {
     <div className="auth-shell">
       <section className="auth-panel">
         <div className="auth-panel__hero">
-          <p className="eyebrow">Professional verification workspace</p>
-          <h1>Detect misleading narratives before they spread.</h1>
+          <p className="eyebrow">Trust intelligence workspace</p>
+          <h1>See risk, credibility, and content signals with more clarity.</h1>
           <p>
-            VeriTrust AI helps analysts review suspicious claims, score credibility,
-            and keep a searchable record of every assessment.
+            VeriSight helps analysts review suspicious claims, assess credibility,
+            and build toward a broader trust and content intelligence workflow over time.
           </p>
         </div>
 

@@ -28,10 +28,10 @@ function AppLayout() {
     <div className="app-shell">
       <aside className={`sidebar ${mobileNavOpen ? "is-open" : ""}`}>
         <div className="brand-mark">
-          <span className="brand-mark__badge">VT</span>
+          <span className="brand-mark__badge">VS</span>
           <div>
-            <p className="brand-mark__eyebrow">Misinformation Detector</p>
-            <h1 className="brand-mark__title">VeriTrust AI</h1>
+            <p className="brand-mark__eyebrow">Trust Intelligence Platform</p>
+            <h1 className="brand-mark__title">VeriSight</h1>
           </div>
         </div>
 
