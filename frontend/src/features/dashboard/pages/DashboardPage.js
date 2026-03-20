@@ -21,6 +21,7 @@ function DashboardPage() {
   const stats = useMemo(() => {
     const total = history.length;
     const fakeItems = history.filter((item) => item.prediction === "FAKE").length;
+    const realItems = history.filter((item) => item.prediction === "REAL").length;
     const averageConfidence = total
       ? `${(
           ((history.reduce((sum, item) => sum + Number(item.confidence || 0), 0) / total) *
@@ -31,11 +32,16 @@ function DashboardPage() {
     return {
       total,
       fakeItems,
+      realItems,
       averageConfidence,
     };
   }, [history]);
 
   const recentItems = useMemo(() => history.slice(0, 3), [history]);
+  const latestSavedItem = recentItems[0];
+  const riskRate = stats.total
+    ? `${Math.round((stats.fakeItems / stats.total) * 100)}%`
+    : "0%";
 
   const predictMutation = useMutation({
     mutationFn: (payload) =>
@@ -70,13 +76,30 @@ function DashboardPage() {
     <div className="page-stack">
       <PageIntro
         eyebrow="Operational dashboard"
-        title="Review suspicious content with a tighter workflow."
-        description="Submit content for analysis, watch confidence scores in context, and keep your latest decisions within reach."
+        title="A clearer command center for credibility review."
+        description="Screen suspect content, compare confidence signals, and keep every decision visible without losing focus."
         aside={
-          <div className="panel page-intro__panel">
-            <span className="eyebrow">Quick status</span>
+          <div className="page-spotlight">
+            <div className="page-spotlight__header">
+              <span className="eyebrow">Live overview</span>
+              <span className="status-pill">Model online</span>
+            </div>
             <strong>{stats.total} analyses recorded</strong>
-            <p>History refreshes automatically after each successful prediction.</p>
+            <p>
+              {latestSavedItem
+                ? `Latest review saved ${formatTimestamp(latestSavedItem.created_at)}.`
+                : "History refreshes automatically after each successful prediction."}
+            </p>
+            <div className="metric-inline">
+              <div>
+                <span>Risk rate</span>
+                <strong>{riskRate}</strong>
+              </div>
+              <div>
+                <span>Credible calls</span>
+                <strong>{stats.realItems}</strong>
+              </div>
+            </div>
           </div>
         }
       />
@@ -106,6 +129,7 @@ function DashboardPage() {
               <p className="eyebrow">Run analysis</p>
               <h2>Evaluate an article, caption, or post</h2>
             </div>
+            <span className="panel__badge">Secure input</span>
           </div>
 
           <form className="stack" onSubmit={handleSubmit}>
@@ -140,6 +164,19 @@ function DashboardPage() {
 
             {error ? <p className="form-message form-message--error">{error}</p> : null}
           </form>
+
+          <div className="notes-grid">
+            <article className="note-card">
+              <span className="note-card__label">Best input</span>
+              <strong>Use a complete claim or excerpt</strong>
+              <p>Full phrasing gives the model better context than a fragment.</p>
+            </article>
+            <article className="note-card">
+              <span className="note-card__label">Workflow</span>
+              <strong>Each result is stored automatically</strong>
+              <p>Successful predictions are pushed into your history for later review.</p>
+            </article>
+          </div>
         </article>
 
         <article className="panel result-panel">
@@ -166,6 +203,16 @@ function DashboardPage() {
                 </p>
               </div>
               <ConfidenceMeter confidence={result.confidence} prediction={result.prediction} />
+              <div className="result-facts">
+                <article>
+                  <span>Classification</span>
+                  <strong>{result.prediction}</strong>
+                </article>
+                <article>
+                  <span>Confidence</span>
+                  <strong>{(Number(result.confidence || 0) * 100).toFixed(1)}%</strong>
+                </article>
+              </div>
               <div className="panel panel--muted">
                 <p className="result-panel__excerpt">{result.text}</p>
               </div>
@@ -204,6 +251,10 @@ function DashboardPage() {
                   prediction={item.prediction}
                   compact
                 />
+                <div className="history-list__footer">
+                  <span>Saved assessment</span>
+                  <strong>{item.prediction === "FAKE" ? "Escalate for review" : "Low concern"}</strong>
+                </div>
               </article>
             ))}
           </div>

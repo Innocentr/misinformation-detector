@@ -1,7 +1,7 @@
 function PageIntro({ eyebrow, title, description, aside }) {
   return (
     <section className="page-intro">
-      <div>
+      <div className="page-intro__content">
         {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
         {description ? <p className="page-intro__description">{description}</p> : null}
