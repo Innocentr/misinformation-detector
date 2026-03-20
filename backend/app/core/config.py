@@ -1,7 +1,12 @@
+from pathlib import Path
 from typing import List
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
+BACKEND_DIR = ROOT_DIR / "backend"
 
 
 class Settings(BaseSettings):
@@ -16,7 +21,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         case_sensitive=True,
-        env_file=".env",
+        env_file=(ROOT_DIR / ".env", BACKEND_DIR / ".env"),
         extra="ignore",
     )
 

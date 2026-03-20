@@ -79,7 +79,7 @@ ruff check .
 - Environment-driven configuration with `.env.example`
 - Initial backend unit tests for CRUD and inference helpers
 
-## Next Recommended Steps
+## Next Steps
 
 - Add API integration tests for auth and prediction routes
 - Add database migrations with Alembic
