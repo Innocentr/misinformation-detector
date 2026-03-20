@@ -1,0 +1,129 @@
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 460px);
+  background:
+    radial-gradient(circle at top left, rgba(177, 65, 41, 0.18), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(177, 65, 41, 0.1), transparent 26%),
+    linear-gradient(135deg, #f7f1e8 0%, #f4efe9 42%, #efe6db 100%);
+}
+
+.auth-panel {
+  padding: 48px clamp(24px, 5vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.auth-panel__hero {
+  max-width: 640px;
+}
+
+.auth-panel__hero h1 {
+  margin: 16px 0;
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+}
+
+.auth-panel__hero p {
+  max-width: 520px;
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+}
+
+.auth-proof {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.auth-proof article {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(26, 33, 52, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+}
+
+.auth-proof strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+}
+
+.auth-card-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(18, 25, 38, 0.04);
+  border-left: 1px solid rgba(26, 33, 52, 0.06);
+}
+
+.auth-card {
+  width: min(100%, 420px);
+  padding: 36px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(26, 33, 52, 0.08);
+  box-shadow: 0 24px 60px rgba(30, 33, 44, 0.12);
+}
+
+.auth-card h2 {
+  margin: 10px 0 8px;
+  font-size: 2rem;
+}
+
+.auth-card__lede {
+  margin-bottom: 24px;
+  color: var(--color-text-muted);
+}
+
+.auth-card__footer {
+  margin-top: 20px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.auth-card__footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-panel {
+    padding-bottom: 12px;
+  }
+
+  .auth-card-wrap {
+    background: transparent;
+    border-left: 0;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-panel {
+    padding: 24px 20px 8px;
+  }
+
+  .auth-proof {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card-wrap {
+    padding: 20px;
+  }
+
+  .auth-card {
+    padding: 28px 22px;
+    border-radius: 24px;
+  }
+}
