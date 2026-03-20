@@ -78,10 +78,11 @@ ruff check .
 - Safer model loading and logging in `backend/app/ml/loader.py` and `backend/app/main.py`
 - Environment-driven configuration with `.env.example`
 - Initial backend unit tests for CRUD and inference helpers
+- CI automation for backend linting and tests
 
 ## Next Steps
 
 - Add API integration tests for auth and prediction routes
 - Add database migrations with Alembic
 - Replace SQLite with PostgreSQL for deployed environments
-- Add CI to run `pytest` and `ruff` on every push
+- Split SQLModel tables from API schemas for cleaner backend boundaries
