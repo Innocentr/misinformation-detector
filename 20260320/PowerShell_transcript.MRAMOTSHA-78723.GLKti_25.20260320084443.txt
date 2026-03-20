@@ -1,0 +1,72 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084444
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-Content frontend/src/services/api.js
+Process ID: 34528
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-Content frontend/src/services/api.js
+import axios from "axios";
+
+const API = axios.create({
+  baseURL: "http://127.0.0.1:8000",
+});
+
+// Attach token automatically
+API.interceptors.request.use(
+  (req) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      req.headers.Authorization = `Bearer ${token}`;
+    }
+    return req;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Global error handling Security
+API.interceptors.response.use(
+  (response) => {
+    // If the request succeeds, just pass it through
+    return response;
+  },
+  (error) => {
+    // Check if the error is 401 (Unauthorized) or 403 (Forbidden)
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.warn("Session expired or unauthorized. Logging out...");
+
+      // 1. Wipe the invalid token
+      localStorage.removeItem("token");
+
+      // 2. Force a redirect to the login page.
+
+      window.location.href = "/";
+    }
+
+    // Always reject the promise so the component can catch the error if it wants to
+    return Promise.reject(error);
+  }
+);
+
+export default API;
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084444
+**********************

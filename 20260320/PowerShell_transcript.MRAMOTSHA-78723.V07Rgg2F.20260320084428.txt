@@ -1,0 +1,111 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084428
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/models.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+Process ID: 13432
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/models.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+   1: from __future__ import annotations
+   2:
+   3: from datetime import datetime, timezone
+   4: from typing import List, Optional
+   5:
+   6: from sqlalchemy.orm import relationship
+   7: from sqlmodel import Field, Relationship, SQLModel
+   8: from pydantic import BaseModel
+   9:
+  10:
+  11: # User Logic
+  12:
+  13: class UserBase(SQLModel):
+  14:     username: str = Field(unique=True, index=True, min_length=3)
+  15:     is_active: bool = Field(default=True)
+  16:     is_superuser: bool = Field(default=False)
+  17:
+  18:
+  19: class User(UserBase, table=True):
+  20:     __tablename__ = "user"
+  21:
+  22:     id: Optional[int] = Field(default=None, primary_key=True)
+  23:     hashed_password: str
+  24:
+  25:     predictions: List["Prediction"] = Relationship(
+  26:         sa_relationship=relationship("Prediction", back_populates="owner")
+  27:     )
+  28:
+  29:
+  30: # Schemas for User Data Transfer
+  31:
+  32: class UserCreate(UserBase):
+  33:     password: str = Field(min_length=8)
+  34:
+  35:
+  36: class UserPublic(UserBase):
+  37:     id: int
+  38:
+  39:
+  40: # Prediction Logic
+  41:
+  42: class PredictionBase(SQLModel):
+  43:     text: str = Field(min_length=1)
+  44:     prediction: str
+  45:     confidence: float
+  46:
+  47:
+  48: class Prediction(PredictionBase, table=True):
+  49:     __tablename__ = "prediction"
+  50:
+  51:     id: Optional[int] = Field(default=None, primary_key=True)
+  52:     created_at: datetime = Field(
+  53:         default_factory=lambda: datetime.now(timezone.utc)
+  54:     )
+  55:
+  56:     # Foreign Key connects to the 'user' table
+  57:     user_id: int = Field(foreign_key="user.id", index=True)
+  58:
+  59:     owner: Optional[User] = Relationship(
+  60:         sa_relationship=relationship("User", back_populates="predictions")
+  61:     )
+  62:
+  63:
+  64: # Schemas for Prediction Data Transfer
+  65:
+  66: class PredictRequest(SQLModel):
+  67:     text: str = Field(min_length=1)
+  68:
+  69:
+  70: class PredictionPublic(PredictionBase):
+  71:     id: int
+  72:     created_at: datetime
+  73:     user_id: int
+  74:
+  75:
+  76: # Auth & Security Schemas
+  77:
+  78: class Token(BaseModel):
+  79:     access_token: str
+  80:     token_type: str = "bearer"
+  81:
+  82:
+  83: class TokenPayload(BaseModel):
+  84:     sub: Optional[str] = None
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084429
+**********************

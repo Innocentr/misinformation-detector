@@ -1,0 +1,49 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084428
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/core/config.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+Process ID: 28852
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/core/config.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+   1: from pydantic_settings import BaseSettings, SettingsConfigDict
+   2: from typing import List
+   3:
+   4: class Settings(BaseSettings):
+   5:     PROJECT_NAME: str = "Vantage AI Suite"
+   6:     API_V1_STR: str = "/api/v1"
+   7:     SECRET_KEY: str = "your-secret-key-here"
+   8:     ALGORITHM: str = "HS256"
+   9:
+  10:
+  11:     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+  12:
+  13:     # SQLite Database URL
+  14:     SQLALCHEMY_DATABASE_URI: str = "sqlite:///./test.db"
+  15:
+  16:     # Allow React frontend
+  17:     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "localhost:3000"]
+  18:
+  19:     model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")
+  20:
+  21: # This is the instantiated object that main.py and security.py import
+  22: settings = Settings()
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084429
+**********************

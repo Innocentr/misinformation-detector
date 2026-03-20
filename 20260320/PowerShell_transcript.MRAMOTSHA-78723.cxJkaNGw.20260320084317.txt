@@ -1,0 +1,48 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084318
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-ChildItem -Force
+Process ID: 19656
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-ChildItem -Force
+
+
+    Directory: C:\Users\CodexSandboxOffline\.codex\.sandbox\cwd\dbcde79cb513f111
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d--h--        2026/03/20     08:23                .git
+d-----        2026/03/20     08:43                20260320
+d-----        2026/03/19     12:54                backend
+d-----        2026/03/17     14:36                data
+d-----        2026/03/17     14:09                docs
+d-----        2026/03/19     06:37                frontend
+d-----        2026/03/17     15:17                notebooks
+d-----        2026/03/17     15:17                src
+d-----        2026/03/17     14:45                venv
+-a----        2026/03/17     14:16           5018 .gitignore
+-a----        2026/03/17     14:08           1086 LICENSE
+-a----        2026/03/17     15:30            478 README.md
+
+
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084319
+**********************

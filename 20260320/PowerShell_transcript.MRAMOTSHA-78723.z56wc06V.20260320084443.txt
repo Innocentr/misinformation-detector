@@ -1,0 +1,48 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084444
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-Content backend/app/api/v1/api.py
+Process ID: 1360
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+Get-Content backend/app/api/v1/api.py
+from fastapi import APIRouter
+from app.api.v1.endpoints import auth, predict, history
+
+api_router = APIRouter()
+
+# from app.api.v1.endpoints import predict
+api_router.include_router(auth.router, prefix="/auth", tags=["Security"])
+api_router.include_router( predict.router,prefix="/predict",tags=["Prediction"])
+
+api_router.include_router(history.router, prefix="/history", tags=["History"])
+
+
+
+
+
+#  makes URLs look like: /api/v1/auth/login
+# api_router.include_router(auth.router, prefix="/auth", tags=["Security"])
+
+
+
+# Future: api_router.include_router(career.router, prefix="/career", tags=["Vantage Career"])
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084444
+**********************

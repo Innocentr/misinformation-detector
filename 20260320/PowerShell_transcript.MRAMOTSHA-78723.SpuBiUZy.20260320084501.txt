@@ -1,0 +1,44 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260320084501
+Username: MRAMOTSHA-78723\CodexSandboxOffline
+RunAs User: MRAMOTSHA-78723\CodexSandboxOffline
+Configuration Name: 
+Machine: MRAMOTSHA-78723 (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/database.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+Process ID: 34288
+PSVersion: 5.1.22621.6133
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.6133
+BuildVersion: 10.0.22621.6133
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;
+$i=0; Get-Content backend/app/database.py | ForEach-Object { $i++; '{0,4}: {1}' -f $i, $_ }
+   1: from sqlalchemy import create_engine
+   2: from sqlalchemy.ext.declarative import declarative_base
+   3: from sqlalchemy.orm import sessionmaker
+   4:
+   5: DATABASE_URL = "sqlite:///./test.db"
+   6:
+   7: engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+   8: SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+   9: Base = declarative_base()
+  10:
+  11:
+  12: def get_db():
+  13:     db = SessionLocal()
+  14:     try:
+  15:         yield db
+  16:     finally:
+  17:         db.close()
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20260320084502
+**********************
