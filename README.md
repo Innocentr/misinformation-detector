@@ -1,21 +1,87 @@
-# ML Model - Fake News Detection
+# Misinformation Detector
 
-## Overview
-This model classifies news articles as FAKE or REAL using TF-IDF and Logistic Regression.
+A full-stack misinformation detection app with a FastAPI backend, a React frontend, and a logistic-regression text classifier.
 
-## Performance
-- Accuracy: ~98.9%
-- Balanced precision and recall
+## Stack
 
-## Features
-- Text preprocessing
-- TF-IDF vectorization (unigrams + bigrams)
-- Explainability via feature importance
+- Backend: FastAPI, SQLModel, JWT auth
+- Frontend: React
+- ML: TF-IDF vectorizer + logistic regression
+- Database: SQLite for local development
 
-## Observations
-- Model relies on stylistic indicators (e.g., "Reuters")
-- Potential dataset bias
+## Project Layout
 
-## Files
-- model.pkl
-- vectorizer.pkl
+```text
+backend/
+  app/
+    api/        # FastAPI routes and dependencies
+    core/       # settings, db, security
+    ml/         # serialized ML artifacts and loader
+    crud.py     # business logic and persistence helpers
+    models.py   # SQLModel tables and API schemas
+frontend/
+```
+
+## Local Setup
+
+1. Create a virtual environment and install dependencies:
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+pip install -e .[dev]
+```
+
+2. Create a local environment file:
+
+```bash
+copy .env.example .env
+```
+
+3. Update `.env` with a strong `SECRET_KEY`.
+
+## Run The Backend
+
+```bash
+cd backend
+uvicorn app.main:app --reload
+```
+
+The API will be available at `http://127.0.0.1:8000` and OpenAPI docs at `http://127.0.0.1:8000/docs`.
+
+## Run The Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+## Quality Checks
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run linting:
+
+```bash
+ruff check .
+```
+
+## Current Backend Improvements
+
+- Thin route handlers with reusable business logic in `backend/app/crud.py`
+- Centralized DB setup in `backend/app/core/db.py`
+- Safer model loading and logging in `backend/app/ml/loader.py` and `backend/app/main.py`
+- Environment-driven configuration with `.env.example`
+- Initial backend unit tests for CRUD and inference helpers
+
+## Next Recommended Steps
+
+- Add API integration tests for auth and prediction routes
+- Add database migrations with Alembic
+- Replace SQLite with PostgreSQL for deployed environments
+- Add CI to run `pytest` and `ruff` on every push

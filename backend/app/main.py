@@ -1,43 +1,39 @@
-import pickle
+import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.api import api_router
 from app.core.config import settings
-from app.core.db import engine, init_db
-from app.models import User, Prediction
+from app.core.db import init_db
+from app.ml.loader import load_ml_models
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize Database. Creates tables like user and prediction
-    print("Vantage AI: Syncing Database Schema...")
+    logger.info("Syncing database schema")
     init_db()
 
-    # load ML Models into app state
-    print("Vantage AI: Loading ML Models...")
     app.state.ml_models = {}
     try:
-       
-        app.state.ml_models["model"] = pickle.load(open("app/ml/lr_model.pkl", "rb"))
-        app.state.ml_models["vectorizer"] = pickle.load(open("app/ml/vectorizer.pkl", "rb"))
-        print("Vantage AI: ML Models ready.")
-    except Exception as e:
-        print(f"Vantage AI: Model Load Error -> {e}")
-    
+        logger.info("Loading ML models")
+        app.state.ml_models = load_ml_models()
+        logger.info("ML models ready")
+    except Exception:
+        logger.exception("Failed to load ML models")
+
     yield
-    # Clean up on shutdown
     app.state.ml_models.clear()
 
-# --- App Initialization ---
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     lifespan=lifespan,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
-# --- Middleware ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
@@ -46,5 +42,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Routes ---
 app.include_router(api_router, prefix=settings.API_V1_STR)
