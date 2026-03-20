@@ -2,10 +2,11 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ConfidenceMeter from "../../../components/ui/ConfidenceMeter";
 import EmptyState from "../../../components/ui/EmptyState";
+import ExpandableText from "../../../components/ui/ExpandableText";
 import PageIntro from "../../../components/ui/PageIntro";
 import PredictionBadge from "../../../components/ui/PredictionBadge";
 import { apiRequest } from "../../../lib/apiClient";
-import { formatTimestamp, truncateText } from "../../../lib/formatters";
+import { formatTimestamp } from "../../../lib/formatters";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -182,7 +183,11 @@ function HistoryPage() {
                     <PredictionBadge prediction={record.prediction} />
                     <span>{formatTimestamp(record.created_at)}</span>
                   </div>
-                  <p className="history-card__text">{truncateText(record.text, 220)}</p>
+                  <ExpandableText
+                    text={record.text}
+                    previewLength={180}
+                    previewClassName="history-card__text"
+                  />
                   <ConfidenceMeter confidence={record.confidence} prediction={record.prediction} />
                   <div className="history-card__footer">
                     <span>Archive note</span>

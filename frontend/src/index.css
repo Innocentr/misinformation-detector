@@ -540,10 +540,38 @@ img {
 }
 
 .result-panel__excerpt,
-.history-list__item p,
+.history-list__text,
 .history-card__text {
   margin: 0;
   color: rgba(23, 32, 51, 0.88);
+}
+
+.expandable-text {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.expandable-text__content {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.expandable-text__toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  justify-self: start;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.expandable-text__toggle:hover {
+  color: var(--color-primary-dark);
 }
 
 .result-panel__empty {

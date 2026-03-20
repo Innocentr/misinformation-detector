@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ConfidenceMeter from "../../../components/ui/ConfidenceMeter";
+import ExpandableText from "../../../components/ui/ExpandableText";
 import PageIntro from "../../../components/ui/PageIntro";
 import PredictionBadge from "../../../components/ui/PredictionBadge";
 import StatCard from "../../../components/ui/StatCard";
@@ -214,7 +215,11 @@ function DashboardPage() {
                 </article>
               </div>
               <div className="panel panel--muted">
-                <p className="result-panel__excerpt">{result.text}</p>
+                <ExpandableText
+                  text={result.text}
+                  previewLength={240}
+                  previewClassName="result-panel__excerpt"
+                />
               </div>
             </div>
           ) : (
@@ -245,7 +250,11 @@ function DashboardPage() {
                   <PredictionBadge prediction={item.prediction} />
                   <span>{formatTimestamp(item.created_at)}</span>
                 </div>
-                <p>{item.text}</p>
+                <ExpandableText
+                  text={item.text}
+                  previewLength={140}
+                  previewClassName="history-list__text"
+                />
                 <ConfidenceMeter
                   confidence={item.confidence}
                   prediction={item.prediction}
