@@ -1,8 +1,9 @@
 import logging
 
 from app.api import deps
-from app.crud import create_prediction, predict_text
-from app.models import PredictionPublic, PredictRequest, User
+from app.models import User
+from app.schemas import PredictionPublic, PredictRequest
+from app.services.prediction_service import create_user_prediction, run_prediction
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ def predict_content(
         )
 
     try:
-        result, probability = predict_text(ml_models, payload.text)
+        result, probability = run_prediction(ml_models, payload.text)
     except Exception:
         logger.exception("Prediction inference failed")
         raise HTTPException(
@@ -35,7 +36,7 @@ def predict_content(
             detail="Inference failed. Please try again later.",
         ) from None
 
-    return create_prediction(
+    return create_user_prediction(
         db,
         text=payload.text,
         prediction=result,

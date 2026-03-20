@@ -1,5 +1,7 @@
 from app import crud
-from app.models import Prediction, UserCreate
+from app.features import get_feature_catalog
+from app.models import Prediction
+from app.schemas import UserCreate
 from sqlalchemy.pool import StaticPool
 from sqlmodel import Session, SQLModel, create_engine
 
@@ -100,3 +102,10 @@ def test_prediction_limit_is_applied():
 
         assert len(history) == 2
         assert all(isinstance(item, Prediction) for item in history)
+
+
+def test_feature_catalog_exposes_current_and_planned_tools():
+    features = get_feature_catalog()
+
+    assert any(feature.slug == "misinformation-detector" for feature in features)
+    assert any(feature.slug == "sentiment-analysis" for feature in features)

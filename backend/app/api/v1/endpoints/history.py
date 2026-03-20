@@ -1,8 +1,9 @@
 from typing import List
 
 from app.api import deps
-from app.crud import get_user_prediction_history
-from app.models import PredictionPublic, User
+from app.models import User
+from app.repositories.prediction_repository import get_user_prediction_history
+from app.schemas import PredictionPublic
 from fastapi import APIRouter, Depends
 
 router = APIRouter()

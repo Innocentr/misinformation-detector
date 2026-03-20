@@ -1,7 +1,9 @@
 from app.api import deps
 from app.core import security
-from app.crud import authenticate_user, create_user, get_user_by_username
-from app.models import Token, UserCreate, UserPublic
+from app.repositories.user_repository import get_user_by_username
+from app.schemas import Token, UserCreate, UserPublic
+from app.services.auth_service import authenticate_user
+from app.services.auth_service import register_user as register_user_service
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -38,4 +40,4 @@ def register_user(
             detail="The user with this username already exists in the system.",
         )
 
-    return create_user(db, user_in)
+    return register_user_service(db, user_in)

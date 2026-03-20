@@ -1,15 +1,9 @@
 from app.repositories.prediction_repository import create_prediction, get_user_prediction_history
 from app.repositories.user_repository import create_user, get_user_by_username
-from app.services.auth_service import authenticate_user
-from app.services.prediction_service import run_prediction
-
-predict_text = run_prediction
 
 __all__ = [
-    "authenticate_user",
     "create_prediction",
     "create_user",
     "get_user_by_username",
     "get_user_prediction_history",
-    "predict_text",
 ]

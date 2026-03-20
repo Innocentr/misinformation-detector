@@ -14,11 +14,15 @@ A full-stack misinformation detection app with a FastAPI backend, a React fronte
 ```text
 backend/
   app/
-    api/        # FastAPI routes and dependencies
-    core/       # settings, db, security
-    ml/         # serialized ML artifacts and loader
-    crud.py     # business logic and persistence helpers
-    models.py   # SQLModel tables and API schemas
+    api/           # FastAPI routes and dependencies
+    core/          # settings, db, security
+    features/      # feature-specific logic and future tool modules
+    models/        # SQLModel table models
+    repositories/  # database access
+    schemas/       # API request and response models
+    services/      # orchestration and business workflows
+    ml/            # serialized ML artifacts and loaders
+  tests/
 frontend/
 ```
 
@@ -73,16 +77,17 @@ ruff check .
 
 ## Current Backend Improvements
 
-- Thin route handlers with reusable business logic in `backend/app/crud.py`
+- Thin route handlers with separated repositories, services, and schemas
 - Centralized DB setup in `backend/app/core/db.py`
 - Safer model loading and logging in `backend/app/ml/loader.py` and `backend/app/main.py`
 - Environment-driven configuration with `.env.example`
 - Initial backend unit tests for CRUD and inference helpers
 - CI automation for backend linting and tests
+- A feature catalog and dedicated `features/` package for future AI tools
 
 ## Next Steps
 
 - Add API integration tests for auth and prediction routes
 - Add database migrations with Alembic
 - Replace SQLite with PostgreSQL for deployed environments
-- Split SQLModel tables from API schemas for cleaner backend boundaries
+- Add feature-specific routers as new tools move from planned to available
