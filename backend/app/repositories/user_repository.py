@@ -1,7 +1,8 @@
+from sqlmodel import Session, select
+
 from app.core import security
 from app.models import User
 from app.schemas import UserCreate
-from sqlmodel import Session, select
 
 
 def get_user_by_username(db: Session, username: str) -> User | None:

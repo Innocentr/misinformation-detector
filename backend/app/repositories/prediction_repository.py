@@ -1,5 +1,6 @@
-from app.models import Prediction
 from sqlmodel import Session, select
+
+from app.models import Prediction
 
 
 def create_prediction(

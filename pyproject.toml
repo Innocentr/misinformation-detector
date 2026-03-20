@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "misinformation-detector"
 version = "0.1.0"
@@ -20,6 +24,13 @@ dev = [
     "pytest",
     "ruff",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "backend"}
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["app*"]
 
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]

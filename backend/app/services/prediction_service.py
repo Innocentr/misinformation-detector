@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from sqlmodel import Session
+
 from app.features.misinformation import run_misinformation_prediction
 from app.models import Prediction
 from app.repositories.prediction_repository import create_prediction
-from sqlmodel import Session
 
 
 def run_prediction(ml_models: dict[str, object], text: str) -> tuple[str, float]:

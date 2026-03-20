@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from app.models.prediction import PredictionBase
 from sqlmodel import Field, SQLModel
+
+from app.models.prediction import PredictionBase
 
 
 class PredictRequest(SQLModel):
